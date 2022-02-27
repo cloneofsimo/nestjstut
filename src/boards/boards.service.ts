@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Board, BoardStatus } from './board.model';
+import { CreateBoardDto } from './dto/create-board.dto';
 
 @Injectable()
 export class BoardsService {
@@ -14,11 +15,12 @@ export class BoardsService {
     return randomUUID();
   }
 
-  createBoard(title: string, desc: string) {
+  createBoard(createBoardDto: CreateBoardDto): Board {
+    const { title, description } = createBoardDto;
     const board: Board = {
       id: this.generateId(),
       title, // this is same as title: title
-      description: desc,
+      description: description,
       status: BoardStatus.PUBLIC,
     };
 
