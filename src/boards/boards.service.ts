@@ -27,6 +27,20 @@ export class BoardsService {
     this.boards.push(board);
     return board;
   }
+
+  getBoardById(id: string): Board {
+    return this.boards.find((board) => board.id === id);
+  }
+
+  deleteBoardById(id: string): void {
+    this.boards = this.boards.filter((board) => board.id !== id);
+  }
+
+  updateBoardStatus(id: string, status: BoardStatus): Board {
+    const board = this.getBoardById(id);
+    board.status = status;
+    return board;
+  }
 }
 
 // You first create service -> Inject into controller -> put it in module.
