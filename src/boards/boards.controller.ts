@@ -7,11 +7,13 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Board, BoardStatus } from './board.model';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 
 @Controller('boards')
+@ApiTags('Boards CRUD API')
 export class BoardsController {
   constructor(private readonly boardsService: BoardsService) {}
 
@@ -33,6 +35,10 @@ export class BoardsController {
     */
 
   @Post()
+  @ApiOperation({ summary: 'Create a new Board, returns the created board' })
+  @ApiCreatedResponse({
+    description: 'The Board has been successfully created.',
+  })
   createBoard(@Body() createBoardDto: CreateBoardDto): Board {
     return this.boardsService.createBoard(createBoardDto);
   }
