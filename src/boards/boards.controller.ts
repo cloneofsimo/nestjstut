@@ -6,11 +6,20 @@ import {
   Param,
   Patch,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Board, BoardStatus } from './board.model';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { UpdateBoardStatusDto } from './dto/update-board-status.dto';
+import { BoardStatusValidationPipe } from './pipes/borad-status-validation.pipes';
 
 @Controller('boards')
 @ApiTags('Boards CRUD API')
@@ -35,6 +44,7 @@ export class BoardsController {
     */
 
   @Post()
+  @UsePipes(ValidationPipe)
   @ApiOperation({ summary: 'Create a new Board, returns the created board' })
   @ApiCreatedResponse({
     description: 'The Board has been successfully created.',
@@ -56,12 +66,19 @@ export class BoardsController {
   deleteBoardById(@Param('id') id: string): void {
     this.boardsService.deleteBoardById(id);
   }
+  // use swagger request body
 
-  @Patch('/:id/status')
+  @Post('/:id/status')
+  @ApiBody({ type: UpdateBoardStatusDto })
+  @UsePipes(ValidationPipe)
   updateBoardStatus(
+    @Body('updateBoardStatusDto', BoardStatusValidationPipe)
+    updateBoardStatusDto: UpdateBoardStatusDto,
     @Param('id') id: string,
-    @Body('status') status: BoardStatus,
   ): Board {
-    return this.boardsService.updateBoardStatus(id, status);
+    return this.boardsService.updateBoardStatus(
+      id,
+      updateBoardStatusDto.statusstr,
+    );
   }
 }
