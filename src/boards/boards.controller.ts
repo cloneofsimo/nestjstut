@@ -68,17 +68,13 @@ export class BoardsController {
   }
   // use swagger request body
 
-  @Post('/:id/status')
+  @Patch('/:id/status')
   @ApiBody({ type: UpdateBoardStatusDto })
-  @UsePipes(ValidationPipe)
   updateBoardStatus(
-    @Body('updateBoardStatusDto', BoardStatusValidationPipe)
-    updateBoardStatusDto: UpdateBoardStatusDto,
+    @Body('statusstr', BoardStatusValidationPipe)
+    statusstr: string,
     @Param('id') id: string,
   ): Board {
-    return this.boardsService.updateBoardStatus(
-      id,
-      updateBoardStatusDto.statusstr,
-    );
+    return this.boardsService.updateBoardStatus(id, BoardStatus[statusstr]);
   }
 }
