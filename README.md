@@ -28,5 +28,4 @@ https://towardsdatascience.com/local-development-set-up-of-postgresql-with-docke
 
 3. `sudo docker run -p 8080:80 -e 'PGADMIN_DEFAULT_EMAIL=cloneofsimo@gmail.com' -e 'PGADMIN_DEFAULT_PASSWORD=cloneofsimo' --name dev-pgadmin -d dpage/pgadmin4`
 
-4. `su
-5. `sudo docker inspect new_postgres -f "{{json .NetworkSettings.Networks }}"`
+4. `sudo docker inspect new_postgres -f "{{json .NetworkSettings.Networks }}"`
