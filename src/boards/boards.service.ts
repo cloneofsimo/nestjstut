@@ -1,49 +1,36 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'crypto';
-import { Board, BoardStatus } from './board.model';
+import { BoardStatus } from './board-status.enum';
+import { BoardRepository } from './board.repository';
+import { Board } from './boards.entity';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardStatusDto } from './dto/update-board-status.dto';
 
 @Injectable()
 export class BoardsService {
-  private boards: Board[] = [];
+  constructor(
+    @InjectRepository(BoardRepository)
+    private boardRepository: BoardRepository,
+  ) {}
 
-  getAllBoards(): Board[] {
-    return this.boards;
-  }
-
-  generateId(): string {
-    return randomUUID();
-  }
-
-  createBoard(createBoardDto: CreateBoardDto): Board {
-    const { title, description } = createBoardDto;
-    const board: Board = {
-      id: this.generateId(),
-      title, // this is same as title: title
-      description: description,
-      status: BoardStatus.PUBLIC,
-    };
-
-    this.boards.push(board);
-    return board;
-  }
-
-  getBoardById(id: string): Board {
-    const found = this.boards.find((board) => board.id === id);
+  async getBoardById(id: number): Promise<Board> {
+    const found = await this.boardRepository.findOne(id);
     if (!found) {
       throw new NotFoundException(`Board with id ${id} not found`);
     }
     return found;
   }
 
-  deleteBoardById(id: string): void {
-    this.boards = this.boards.filter((board) => board.id !== id);
-  }
+  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    const { title, description } = createBoardDto;
+    const board = this.boardRepository.create({
+      title,
+      description,
+      status: BoardStatus.PUBLIC,
+    });
 
-  updateBoardStatus(id: string, status: BoardStatus): Board {
-    const board = this.getBoardById(id);
-    board.status = status;
+    await this.boardRepository.save(board);
     return board;
   }
 }
