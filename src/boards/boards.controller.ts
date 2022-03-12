@@ -6,10 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOperation,
@@ -24,6 +27,8 @@ import { BoardStatusValidationPipe } from './pipes/borad-status-validation.pipes
 
 @Controller('boards')
 @ApiTags('Boards CRUD API')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 export class BoardsController {
   constructor(private boardService: BoardsService) {}
 
