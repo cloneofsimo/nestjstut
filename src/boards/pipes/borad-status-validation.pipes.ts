@@ -4,7 +4,7 @@ import {
   PipeTransform,
 } from '@nestjs/common';
 
-import { BoardStatus } from '../board.model';
+import { BoardStatus } from '../board-status.enum';
 
 // Status should only be PUBLIC or PRIVATE
 // Let's see if thats the case.
